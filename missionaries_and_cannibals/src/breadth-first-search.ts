@@ -4,7 +4,7 @@ import { Search } from './search'
 
 export class BreadthFirstSearch extends Search {
   private goal: Node
-  private queue: Node[] = []
+  private queue: Node[]
   private solution: Node | undefined
 
   constructor (start: Node, goal: Node) {
@@ -23,6 +23,8 @@ export class BreadthFirstSearch extends Search {
 
       if (!node.valid()) continue
 
+      if (this.alreadyExplored(node)) continue
+
       this.explored.push(node)
 
       if (node.equal(this.goal)) {
@@ -33,7 +35,7 @@ export class BreadthFirstSearch extends Search {
       for (const action of ACTIONS) {
         const newState = this.getNextState(node.state, action)
         const newChild = new Node(newState)
-        if (newChild.valid() && !this.alreadyExplored(newChild)) {
+        if (newChild.valid()) {
           node.addChild(newChild, action)
           this.queue.push(newChild)
         }

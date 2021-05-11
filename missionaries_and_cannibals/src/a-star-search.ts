@@ -6,13 +6,11 @@ export class AStarSearch extends Search {
   private start: Node
   private goal: Node
   private solution: Node | undefined
-  private stack: Node[]
 
   constructor (start: Node, goal: Node) {
     super()
     this.start = new Node(start.state)
     this.goal = new Node(goal.state)
-    this.stack = [start]
   }
 
   private getBits (state: number[]): string {
@@ -52,11 +50,9 @@ export class AStarSearch extends Search {
   search (): Node | undefined {
     console.log('A* Search')
 
-    while (this.stack.length) {
-      const node = this.stack.pop()
+    let node = this.start
 
-      if (!node) continue
-
+    while (node) {
       if (node.equal(this.goal)) {
         this.solution = node
         break
@@ -85,7 +81,7 @@ export class AStarSearch extends Search {
             minValue = child
           }
         }
-        this.stack.push(minValue)
+        node = minValue
       }
     }
 

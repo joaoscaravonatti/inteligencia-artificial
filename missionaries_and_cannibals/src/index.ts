@@ -1,6 +1,7 @@
 import { Node } from './node'
 import { GOAL, START } from './constants'
 import { AStarSearch } from './a-star-search'
+import { BreadthFirstSearch } from './breadth-first-search'
 
 const printPath = (node: Node | undefined): void => {
   if (node) {
@@ -11,6 +12,9 @@ const printPath = (node: Node | undefined): void => {
 
 const start = new Node(START)
 const goal = new Node(GOAL)
+
 const ass = new AStarSearch(start, goal)
+const bfs = new BreadthFirstSearch(start, goal)
 
 printPath(ass.search())
+// printPath(bfs.search())
