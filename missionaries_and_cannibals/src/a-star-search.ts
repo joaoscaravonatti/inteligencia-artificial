@@ -46,8 +46,6 @@ export class AStarSearch extends Search {
       }
     }
 
-    // console.log(`a: ${a.state}, bits: ${aBits} -> b: ${b.state}, bits: ${bBits} = ${distance}`)
-
     return distance
   }
 
