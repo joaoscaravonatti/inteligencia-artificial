@@ -53,7 +53,7 @@ def perform_fitness(C1D, C2D, C3D, C4D, C1C, C2C, C3C, C4C, C1T, C2T, C3T, C4T):
     # volume máximo no compartimento central
     h5 = np.maximum(0, float(((((c1c * 0.480) + (c2c * 0.650) + (c3c * 0.580) + (c4c * 0.390)) - 8700)))) / (6800 / nh)
     # volume máximo no compartimento traseiro
-    h6 = np.maximum(0, float(((((c1t * 0.480) + (c2t * 0.650) + (c3t * 0.580) + (c4t * 0.390)) - 5300)))) / (6800 / nh)
+    h6 = np.maximum(0, float(((((c1t * 0.480) + (c2t * 0.650) + (c3t * 0.580) + (c4t * 0.390)) - 5300)))) / (5300 / nh)
 
     # peso máximo da carga 1
     h7 = np.maximum(0, float((c1d + c1c + c1t) - 18000)) / (18000 / nh)
@@ -65,19 +65,18 @@ def perform_fitness(C1D, C2D, C3D, C4D, C1C, C2C, C3C, C4C, C1T, C2T, C3T, C4T):
     h10 = np.maximum(0, float((c4d + c3c + c4t) - 12000)) / (12000 / nh)
 
     # proporção dianteira
-    h11 = np.maximum(0, float(((d / total_weight) - 0.29411764706))) / (0.29411764706 / nh)
+    h11 = np.maximum(0, float(((d / total_weight) - (10 / 34)))) / ((10 / 34) / nh)
     # proporção central
-    h12 = np.maximum(0, float(((c / total_weight) - 0.47058823529))) / (0.47058823529 / nh)
+    h12 = np.maximum(0, float(((c / total_weight) - (16 / 34)))) / ((16 / 34) / nh)
     # proporção traseira
-    h13 = np.maximum(0, float(((t / total_weight) - 0.23529411765))) / (0.23529411765 / nh)
+    h13 = np.maximum(0, float(((t / total_weight) - (8 / 34)))) / ((8 / 34) / nh)
 
     h = h1 + h2 + h3 + h4 + h5 + h6 + h7 + h8 + h9 + h10 + h11 + h12 + h13
-
     fit = fit - h
 
     return fit
 
-def solution_evaluation(C1D, C2D, C3D, C4D, C1C, C2C, C3C, C4C, C1T, C2T, C3T, C4T):
+def solution_evaluation(SEED, C1D, C2D, C3D, C4D, C1C, C2C, C3C, C4C, C1T, C2T, C3T, C4T):
     c1d = np.round(C1D)
     c2d = np.round(C2D)
     c3d = np.round(C3D)
@@ -109,6 +108,7 @@ def solution_evaluation(C1D, C2D, C3D, C4D, C1C, C2C, C3C, C4C, C1T, C2T, C3T, C
     total_weight = cd + cc + ct
 
     print('\nRelatório')
+    print(f'Valor utilizado na seed: {SEED}')
     print(f'Lucro total: R$ %.2f - Peso total: {total_weight}' % profit)
     print(f'Carga 1: {c1}kg - {profit_c1}')
     print(f'Carga 2: {c2}kg - {profit_c2}')
@@ -132,7 +132,8 @@ def solution_evaluation(C1D, C2D, C3D, C4D, C1C, C2C, C3C, C4C, C1T, C2T, C3T, C
 
 def main():
   rand = Random()
-  rand.seed(int(time()))
+  seedValue = int(time())
+  rand.seed(seedValue)
 
   ea = ec.GA(rand)
   ea.selector = ec.selectors.tournament_selection
@@ -150,7 +151,7 @@ def main():
                         pop_size=10000,
                         maximize=True,
                         bounder=ec.Bounder(0, 16000),
-                        max_generations=1000,
+                        max_generations=10000,
                         num_inputs=12,
                         crossover_rae=1.0,
                         num_crossover_points=1,
@@ -158,14 +159,11 @@ def main():
                         num_elites=1,
                         num_selected=12,
                         tournament_size=12,
-                        statistics_file=open('aviao_statistics.csv', 'w'),
-                        individuals_file=open('aviao_individuals.csv', 'w'))
+                        statistics_file=open('statistics.csv', 'w'),
+                        individuals_file=open('individuals.csv', 'w'))
 
   final_pop.sort(reverse=True)
-  print(final_pop[0])
-
-  perform_fitness(final_pop[0].candidate[0], final_pop[0].candidate[1], final_pop[0].candidate[2], final_pop[0].candidate[3], final_pop[0].candidate[4], final_pop[0].candidate[5], final_pop[0].candidate[6], final_pop[0].candidate[7], final_pop[0].candidate[8], final_pop[0].candidate[9], final_pop[0].candidate[10], final_pop[0].candidate[11])
-  solution_evaluation(final_pop[0].candidate[0], final_pop[0].candidate[1], final_pop[0].candidate[2], final_pop[0].candidate[3], final_pop[0].candidate[4], final_pop[0].candidate[5], final_pop[0].candidate[6], final_pop[0].candidate[7], final_pop[0].candidate[8], final_pop[0].candidate[9], final_pop[0].candidate[10], final_pop[0].candidate[11])
+  solution_evaluation(seedValue, final_pop[0].candidate[0], final_pop[0].candidate[1], final_pop[0].candidate[2], final_pop[0].candidate[3], final_pop[0].candidate[4], final_pop[0].candidate[5], final_pop[0].candidate[6], final_pop[0].candidate[7], final_pop[0].candidate[8], final_pop[0].candidate[9], final_pop[0].candidate[10], final_pop[0].candidate[11])
 
 if __name__ == '__main__':
   main()
