@@ -148,17 +148,17 @@ def main():
 
   final_pop = ea.evolve(generator=generate_,
                         evaluator=evaluate_,
-                        pop_size=10000,
+                        pop_size=1000,
                         maximize=True,
                         bounder=ec.Bounder(0, 16000),
-                        max_generations=10000,
+                        max_generations=5000,
                         num_inputs=12,
-                        crossover_rate=1.0,
+                        crossover_rate=0.75,
                         num_crossover_points=1,
-                        mutation_rate=0.5,
+                        mutation_rate=0.3,
                         num_elites=1,
                         num_selected=12,
-                        tournament_size=12,
+                        tournament_size=16,
                         statistics_file=open('statistics.csv', 'w'),
                         individuals_file=open('individuals.csv', 'w'))
 
